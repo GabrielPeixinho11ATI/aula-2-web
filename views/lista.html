@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estoque - Loja do Peixinho</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+
+    <style>
+        /* CSS EXTRA PARA O LER MAIS */
+        .ler-mais-btn {
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 5px;
+            display: inline-block;
+        }
+        .ler-mais-btn:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo-area">
+            <i class="fa-solid fa-anchor"></i>
+            <span>Loja do Peixinho</span>
+        </div>
+        <nav>
+            <a href="/">Início</a>
+            <a href="/cadastro">Novo Produto</a>
+            <a href="/produtos" class="active">Estoque</a>
+        </nav>
+    </header>
+
+    <main>
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h2 style="color: var(--primary); font-family: 'Poppins', sans-serif;">
+                <i class="fa-solid fa-boxes-stacked"></i> Estoque Atual
+            </h2>
+            <a href="/cadastro" class="btn btn-primary">
+                <i class="fa-solid fa-plus"></i> Novo Item
+            </a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th width="10%">ID</th>
+                        <th width="25%">Produto</th>
+                        <th width="15%">Preço</th>
+                        <th width="50%">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-produtos">
+                    </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Loja do Peixinho</p>
+    </footer>
+
+    <script>
+        // Função para alternar entre ler mais/menos
+        function toggleDescricao(elemento) {
+            const td = elemento.parentElement;
+            const textoCurto = td.querySelector('.texto-curto');
+            const textoCompleto = td.querySelector('.texto-completo');
+
+            if (textoCompleto.style.display === 'none') {
+                // Mostrar tudo
+                textoCurto.style.display = 'none';
+                textoCompleto.style.display = 'inline';
+                elemento.innerHTML = 'Ler menos <i class="fa-solid fa-chevron-up"></i>';
+            } else {
+                // Esconder
+                textoCurto.style.display = 'inline';
+                textoCompleto.style.display = 'none';
+                elemento.innerHTML = 'Ler mais <i class="fa-solid fa-chevron-down"></i>';
+            }
+        }
+
+        fetch('/api/produtos')
+            .then(response => response.json())
+            .then(produtos => {
+                const tbody = document.getElementById('tabela-produtos');
+                tbody.innerHTML = '';
+                
+                if (produtos.length > 0) {
+                    produtos.forEach(produto => {
+                        const tr = document.createElement('tr');
+                        
+                        // LÓGICA DO LER MAIS
+                        let descricaoHtml = produto.descricao || '-';
+                        const limite = 60; // Limite de caracteres
+
+                        if (produto.descricao && produto.descricao.length > limite) {
+                            const parteCurta = produto.descricao.substring(0, limite);
+                            const parteCompleta = produto.descricao;
+                            
+                            descricaoHtml = `
+                                <span class="texto-curto">${parteCurta}...</span>
+                                <span class="texto-completo" style="display:none;">${parteCompleta}</span>
+                                <br>
+                                <a href="javascript:void(0)" class="ler-mais-btn" onclick="toggleDescricao(this)">
+                                    Ler mais <i class="fa-solid fa-chevron-down"></i>
+                                </a>
+                            `;
+                        }
+
+                        tr.innerHTML = `
+                            <td style="color: #64748b;">#${produto.id}</td>
+                            <td style="font-weight: 600; color: var(--primary);">${produto.nome}</td>
+                            <td><span class="price-tag">R$ ${parseFloat(produto.preco).toFixed(2)}</span></td>
+                            <td style="color: #64748b; font-size: 0.95rem; line-height: 1.5;">${descricaoHtml}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center; padding: 3rem; color: #94a3b8;">
+                                <i class="fa-solid fa-fish" style="font-size: 2rem; margin-bottom: 10px; display:block;"></i>
+                                Nenhum peixinho no aquário (estoque vazio).
+                            </td>
+                        </tr>`;
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+    </script>
+</body>
+</html>
