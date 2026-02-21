@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estoque - Loja do Peixinho</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
 
     <style>
@@ -20,6 +21,7 @@
             margin-left: 5px;
             display: inline-block;
         }
+
         .ler-mais-btn:hover {
             color: var(--accent);
             text-decoration: underline;
@@ -41,7 +43,8 @@
     </header>
 
     <main>
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div
+            style="width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h2 style="color: var(--primary); font-family: 'Poppins', sans-serif;">
                 <i class="fa-solid fa-boxes-stacked"></i> Estoque Atual
             </h2>
@@ -57,11 +60,12 @@
                         <th width="10%">ID</th>
                         <th width="25%">Produto</th>
                         <th width="15%">Preço</th>
-                        <th width="50%">Descrição</th>
+                        <th width="40%">Descrição</th>
+                        <th width="10%">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabela-produtos">
-                    </tbody>
+                </tbody>
             </table>
         </div>
     </main>
@@ -95,11 +99,11 @@
             .then(produtos => {
                 const tbody = document.getElementById('tabela-produtos');
                 tbody.innerHTML = '';
-                
+
                 if (produtos.length > 0) {
                     produtos.forEach(produto => {
                         const tr = document.createElement('tr');
-                        
+
                         // LÓGICA DO LER MAIS
                         let descricaoHtml = produto.descricao || '-';
                         const limite = 60; // Limite de caracteres
@@ -107,7 +111,7 @@
                         if (produto.descricao && produto.descricao.length > limite) {
                             const parteCurta = produto.descricao.substring(0, limite);
                             const parteCompleta = produto.descricao;
-                            
+
                             descricaoHtml = `
                                 <span class="texto-curto">${parteCurta}...</span>
                                 <span class="texto-completo" style="display:none;">${parteCompleta}</span>
@@ -123,13 +127,18 @@
                             <td style="font-weight: 600; color: var(--primary);">${produto.nome}</td>
                             <td><span class="price-tag">R$ ${parseFloat(produto.preco).toFixed(2)}</span></td>
                             <td style="color: #64748b; font-size: 0.95rem; line-height: 1.5;">${descricaoHtml}</td>
+                            <td>
+                                <button onclick="deletarProduto(${produto.id}, this)" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem; background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    <i class="fa-solid fa-trash"></i> Apagar
+                                </button>
+                            </td>
                         `;
                         tbody.appendChild(tr);
                     });
                 } else {
                     tbody.innerHTML = `
                         <tr>
-                            <td colspan="4" style="text-align: center; padding: 3rem; color: #94a3b8;">
+                            <td colspan="5" style="text-align: center; padding: 3rem; color: #94a3b8;">
                                 <i class="fa-solid fa-fish" style="font-size: 2rem; margin-bottom: 10px; display:block;"></i>
                                 Nenhum peixinho no aquário (estoque vazio).
                             </td>
@@ -137,6 +146,42 @@
                 }
             })
             .catch(error => console.error('Erro:', error));
+
+        function deletarProduto(id, botao) {
+            if (confirm('Tem certeza que deseja apagar este produto?')) {
+                fetch(`/api/produtos/${id}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            alert(data.message);
+                            // Remover a linha da tabela
+                            const linha = botao.closest('tr');
+                            linha.remove();
+
+                            // Se a tabela ficar vazia, mostrar a mensagem de estoque vazio
+                            const tbody = document.getElementById('tabela-produtos');
+                            if (tbody.children.length === 0) {
+                                tbody.innerHTML = `
+                                <tr>
+                                    <td colspan="5" style="text-align: center; padding: 3rem; color: #94a3b8;">
+                                        <i class="fa-solid fa-fish" style="font-size: 2rem; margin-bottom: 10px; display:block;"></i>
+                                        Nenhum peixinho no aquário (estoque vazio).
+                                    </td>
+                                </tr>`;
+                            }
+                        } else {
+                            alert('Erro ao apagar produto: ' + (data.error || 'Erro desconhecido'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao deletar:', error);
+                        alert('Erro de conexão ao tentar apagar o produto.');
+                    });
+            }
+        }
     </script>
 </body>
+
 </html>

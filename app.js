@@ -88,6 +88,28 @@ app.get('/api/produtos', (req, res) => {
     });
 });
 
+// Rota DELETE '/api/produtos/:id' -> Deleta um produto pelo ID
+app.delete('/api/produtos/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'DELETE FROM produtos_Peixinho WHERE id = ?';
+
+    connection.query(sql, [id], (err, result) => {
+        if (err) {
+            console.error('❌ Erro ao deletar produto:', err);
+            res.status(500).json({ error: 'Erro ao deletar produto no banco de dados' });
+            return;
+        }
+
+        if (result.affectedRows === 0) {
+            res.status(404).json({ error: 'Produto não encontrado' });
+            return;
+        }
+
+        console.log('✅ Produto deletado com sucesso:', id);
+        res.json({ message: 'Produto apagado com sucesso!' });
+    });
+});
+
 // Iniciar o Servidor
 app.listen(port, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${port}`);
