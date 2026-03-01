@@ -44,6 +44,11 @@ app.get('/cadastro', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'cadastro.html'));
 });
 
+// Rota GET '/editar-produto/:id' -> Serve editar.html
+app.get('/editar-produto/:id', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'editar.html'));
+});
+
 // Rota POST '/salvar-produto' -> Recebe os dados e faz INSERT no MySQL
 app.post('/salvar-produto', (req, res) => {
     // 1. Pegar dados do formulário
@@ -85,6 +90,51 @@ app.get('/api/produtos', (req, res) => {
             return;
         }
         res.json(results);
+    });
+});
+
+// API para buscar um único produto por ID
+app.get('/api/produtos/:id', (req, res) => {
+    const { id } = req.params;
+    const sql = 'SELECT * FROM produtos_Peixinho WHERE id = ?';
+
+    connection.query(sql, [id], (err, results) => {
+        if (err) {
+            console.error('❌ Erro ao buscar produto:', err);
+            res.status(500).json({ error: 'Erro ao buscar produto' });
+            return;
+        }
+
+        if (results.length === 0) {
+            res.status(404).json({ error: 'Produto não encontrado' });
+            return;
+        }
+
+        res.json(results[0]);
+    });
+});
+
+// API para atualizar um produto (PUT)
+app.put('/api/produtos/:id', (req, res) => {
+    const { id } = req.params;
+    const { nome, preco, descricao } = req.body;
+
+    const sql = 'UPDATE produtos_Peixinho SET nome = ?, preco = ?, descricao = ? WHERE id = ?';
+
+    connection.query(sql, [nome, preco, descricao, id], (err, result) => {
+        if (err) {
+            console.error('❌ Erro ao atualizar produto:', err);
+            res.status(500).json({ error: 'Erro ao atualizar produto no banco de dados' });
+            return;
+        }
+
+        if (result.affectedRows === 0) {
+            res.status(404).json({ error: 'Produto não encontrado para atualizar' });
+            return;
+        }
+
+        console.log('✅ Produto atualizado com sucesso:', id);
+        res.json({ message: 'Produto atualizado com sucesso!' });
     });
 });
 

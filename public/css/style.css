@@ -2,21 +2,88 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap');
 
 :root {
-    --primary: #002244; /* Azul Marinho Profundo */
-    --accent: #ff9900;  /* Laranja Vibrante */
-    --bg-light: #f0f8ff; /* Azul Alice (quase branco) */
-    --white: #ffffff;
-    --text-dark: #1e293b;
-    --text-gray: #64748b;
+    /* MODO CLARO (Padrão) */
+    --primary: #002244;
+    --accent: #ff9900;
+    --bg-body: #f0f8ff;
+    --bg-surface: #ffffff;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+
+    /* Variáveis Específicas */
+    --bg-input: #f8fafc;
+    --border-input: #cbd5e1;
+    --bg-table-even: #f8fafc;
+    --table-header: #002244;
+
+    /* Tags e Ícones */
+    --price-text: #16a34a;
+    --price-bg: #dcfce7;
+    --icon-bg-highlight: #fff8e1;
+    --icon-bg-normal: #e0f2fe;
+    --icon-color-normal: #002244;
+
     --shadow: 0 10px 30px -10px rgba(0, 34, 68, 0.15);
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* --- MODO ESCURO PERFEITO --- */
+body.dark-mode {
+    /* Cores reajustadas para conforto visual */
+    --primary: #1e293b;
+    /* Azul ardósia escuro para Header e Títulos */
+    --accent: #ffb84d;
+    /* Laranja um pouco mais suave para não doer a vista */
+    --bg-body: #0f172a;
+    /* Fundo da tela bem escuro, mas não preto 100% */
+    --bg-surface: #1e293b;
+    /* Cards e formulários um pouco mais claros para dar elevação */
+
+    /* MODIFICADO: Textos Brancos */
+    --text-main: #ffffff;
+    /* Texto principal agora é BRANCO PURO */
+    --text-muted: #e2e8f0;
+    /* Texto secundário/rodapé um branco bem claro */
+
+    --border-color: #334155;
+    /* Bordas discretas */
+
+    /* Variáveis Específicas Ajustadas */
+    --bg-input: #0f172a;
+    /* Inputs mais escuros que o form para dar profundidade */
+    --border-input: #475569;
+    --bg-table-even: #0f172a;
+    /* Linhas da tabela acompanhando o fundo da tela */
+    --table-header: #0f172a;
+    /* Cabeçalho da tabela combinando com o fundo */
+
+    /* Tags e Ícones em Dark Mode */
+    --price-text: #4ade80;
+    --price-bg: rgba(74, 222, 128, 0.15);
+    --icon-bg-highlight: rgba(255, 184, 77, 0.15);
+    --icon-bg-normal: rgba(148, 163, 184, 0.15);
+    --icon-color-normal: #cbd5e1;
+
+    --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Transição global para todas as cores de fundo, texto e bordas */
+*,
+*::before,
+*::after {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--bg-light);
-    color: var(--text-dark);
+    background-color: var(--bg-body);
+    color: var(--text-main);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -37,24 +104,27 @@ header {
     display: flex;
     align-items: center;
     gap: 12px;
-    color: var(--white);
+    color: #ffffff;
+    /* Fixo para o logo sempre brilhar */
     font-family: 'Poppins', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
 }
 
-.logo-area i { color: var(--accent); }
+.logo-area i {
+    color: var(--accent);
+}
 
 nav a {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
     margin-left: 24px;
     font-weight: 500;
-    transition: 0.3s;
     font-size: 0.95rem;
 }
 
-nav a:hover, nav a.active {
+nav a:hover,
+nav a.active {
     color: var(--accent);
 }
 
@@ -74,18 +144,18 @@ main {
 .wave-header {
     width: 100%;
     line-height: 0;
-    background-color: var(--bg-light);
+    background-color: var(--bg-body);
+    /* O fundo atrás da onda acompanha a cor da página */
 }
 
-.wave-header svg {
-    display: block;
-    width: 100%;
-    height: auto;
+.wave-header svg path {
+    fill: var(--primary);
+    transition: fill 0.3s ease;
 }
 
 .hero-section {
     text-align: center;
-    margin-top: -20px; /* Sobe um pouco pra perto da onda */
+    margin-top: -20px;
     margin-bottom: 3rem;
     z-index: 5;
 }
@@ -93,7 +163,8 @@ main {
 .hero-section h2 {
     font-family: 'Poppins', sans-serif;
     font-size: 2.2rem;
-    color: var(--primary);
+    color: var(--text-main);
+    /* Usando a variável de texto */
     margin-bottom: 10px;
 }
 
@@ -106,22 +177,30 @@ main {
 }
 
 .card-action {
-    background: var(--white);
+    background: var(--bg-surface);
     width: 280px;
     padding: 2.5rem 1.5rem;
     border-radius: 20px;
     box-shadow: var(--shadow);
     text-align: center;
     border-top: 5px solid transparent;
-    transition: transform 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.card-action:hover { transform: translateY(-10px); }
-.card-action.highlight { border-top-color: var(--accent); }
-.card-action.normal { border-top-color: var(--primary); }
+.card-action:hover {
+    transform: translateY(-10px);
+}
+
+.card-action.highlight {
+    border-top-color: var(--accent);
+}
+
+.card-action.normal {
+    border-top-color: var(--border-color);
+    /* Usando borda neutra */
+}
 
 .icon-box {
     width: 60px;
@@ -134,41 +213,63 @@ main {
     margin-bottom: 1.5rem;
 }
 
-.highlight .icon-box { background: #fff8e1; color: var(--accent); }
-.normal .icon-box { background: #e0f2fe; color: var(--primary); }
+.highlight .icon-box {
+    background: var(--icon-bg-highlight);
+    color: var(--accent);
+}
 
-.card-action h3 { margin-bottom: 1rem; color: var(--primary); }
+.normal .icon-box {
+    background: var(--icon-bg-normal);
+    color: var(--icon-color-normal);
+}
+
+.card-action h3 {
+    margin-bottom: 1rem;
+    color: var(--text-main);
+    /* Trocado para variável */
+}
 
 /* --- BOTÕES --- */
 .btn {
     display: inline-block;
     padding: 10px 24px;
-    border-radius: 50px;
+    border-radius: 5px;
     text-decoration: none;
     font-weight: 600;
     font-size: 0.9rem;
-    transition: 0.3s;
     cursor: pointer;
     border: none;
+    margin-bottom: 0.5rem;
+    min-width: 130px;
+    text-align: center;
 }
 
 .btn-primary {
     background-color: var(--accent);
-    color: var(--white);
+    color: #1e293b;
+    /* Texto escuro no botão laranja para melhor contraste */
     box-shadow: 0 4px 15px rgba(255, 153, 0, 0.3);
 }
-.btn-primary:hover { background-color: #e68a00; transform: scale(1.05); }
+
+.btn-primary:hover {
+    background-color: #e68a00;
+    transform: scale(1.05);
+}
 
 .btn-outline {
-    border: 2px solid var(--primary);
-    color: var(--primary);
+    border: 2px solid var(--border-color);
+    color: var(--text-main);
     background: transparent;
 }
-.btn-outline:hover { background: var(--primary); color: var(--white); }
+
+.btn-outline:hover {
+    background: var(--text-main);
+    color: var(--bg-body);
+}
 
 /* --- FORMULÁRIOS (CADASTRO) --- */
 .form-container {
-    background: var(--white);
+    background: var(--bg-surface);
     width: 100%;
     max-width: 500px;
     padding: 2.5rem;
@@ -180,78 +281,107 @@ main {
 .form-title {
     text-align: center;
     margin-bottom: 2rem;
-    color: var(--primary);
+    color: var(--text-main);
 }
 
-.form-group { margin-bottom: 1.5rem; }
-.form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+.form-group {
+    margin-bottom: 1.5rem;
+}
 
-.input-wrapper { position: relative; }
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.input-wrapper {
+    position: relative;
+}
+
 .input-wrapper i {
     position: absolute;
     left: 15px;
     top: 50%;
     transform: translateY(-50%);
-    color: #94a3b8;
+    color: var(--text-muted);
 }
-.input-wrapper textarea + i { top: 20px; transform: none; }
 
-.input-wrapper input, .input-wrapper textarea {
+.input-wrapper textarea+i {
+    top: 20px;
+    transform: none;
+}
+
+.input-wrapper input,
+.input-wrapper textarea {
     width: 100%;
-    padding: 12px 12px 12px 45px; /* Espaço para o ícone */
-    border: 1px solid #cbd5e1;
+    padding: 12px 12px 12px 45px;
+    border: 1px solid var(--border-input);
     border-radius: 8px;
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
-    background: #f8fafc;
-    transition: 0.3s;
+    background: var(--bg-input);
+    color: var(--text-main);
+    /* Cor do texto digitado */
 }
 
-.input-wrapper input:focus, .input-wrapper textarea:focus {
+.input-wrapper input:focus,
+.input-wrapper textarea:focus {
     outline: none;
-    border-color: var(--primary);
-    background: var(--white);
-    box-shadow: 0 0 0 3px rgba(0, 34, 68, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(255, 153, 0, 0.2);
 }
 
-.btn-full { width: 100%; text-align: center; margin-top: 1rem; }
+.btn-full {
+    width: 100%;
+    text-align: center;
+    margin-top: 1rem;
+}
 
 /* --- TABELAS (LISTA) --- */
 .table-container {
-    background: var(--white);
+    background: var(--bg-surface);
     width: 100%;
     border-radius: 12px;
     box-shadow: var(--shadow);
     overflow: hidden;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border-color);
 }
 
-table { width: 100%; border-collapse: collapse; }
-
-thead { 
-    background: var(--primary); 
-    color: var(--white); 
+table {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-th, td { 
-    padding: 1rem; 
-    text-align: left; 
+thead {
+    background: var(--table-header);
+    color: #ffffff;
+    /* Texto do cabeçalho sempre branco/claro */
 }
 
-th { 
-    font-weight: 600; 
-    font-size: 0.85rem; 
-    text-transform: uppercase; 
-    letter-spacing: 0.5px; 
+th,
+td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
 }
 
-/* Mantém o listrado (zebra), mas TIREI o efeito de passar o mouse */
-tr:nth-child(even) { background: #f8fafc; }
+th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+    background: var(--bg-table-even);
+}
 
 .price-tag {
-    color: #16a34a;
+    color: var(--price-text);
     font-weight: 700;
-    background: #dcfce7;
+    background: var(--price-bg);
     padding: 4px 10px;
     border-radius: 20px;
     font-size: 0.9rem;
@@ -261,7 +391,21 @@ tr:nth-child(even) { background: #f8fafc; }
 footer {
     text-align: center;
     padding: 2rem;
-    color: var(--text-gray);
+    color: var(--text-muted);
     font-size: 0.85rem;
     margin-top: auto;
+}
+
+/* --- FORÇAR TEXTO BRANCO NO DARK MODE --- */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode p,
+body.dark-mode span,
+body.dark-mode label,
+body.dark-mode th,
+body.dark-mode td,
+body.dark-mode input,
+body.dark-mode textarea {
+    color: #ffffff !important;
 }

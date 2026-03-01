@@ -9,38 +9,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@500;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="/css/style.css">
-
-    <style>
-        /* CSS EXTRA PARA O LER MAIS */
-        .ler-mais-btn {
-            color: var(--primary);
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-decoration: none;
-            margin-left: 5px;
-            display: inline-block;
-        }
-
-        .ler-mais-btn:hover {
-            color: var(--accent);
-            text-decoration: underline;
-        }
-    </style>
+    <!-- React CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
 
 <body>
-    <header>
-        <div class="logo-area">
-            <i class="fa-solid fa-anchor"></i>
-            <span>Loja do Peixinho</span>
-        </div>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/cadastro">Novo Produto</a>
-            <a href="/produtos" class="active">Estoque</a>
-        </nav>
-    </header>
+    <div id="header-root" data-active="estoque"></div>
+    <script src="/js/Header.jsx" type="text/babel"></script>
 
     <main>
         <div
@@ -128,6 +105,9 @@
                             <td><span class="price-tag">R$ ${parseFloat(produto.preco).toFixed(2)}</span></td>
                             <td style="color: #64748b; font-size: 0.95rem; line-height: 1.5;">${descricaoHtml}</td>
                             <td>
+                                <a href="/editar-produto/${produto.id}" class="btn btn-primary" style="padding: 5px 10px; font-size: 0.8rem; text-decoration: none; display: inline-block;">
+                                    <i class="fa-solid fa-pen-to-square"></i> Editar
+                                </a>
                                 <button onclick="deletarProduto(${produto.id}, this)" class="btn btn-danger" style="padding: 5px 10px; font-size: 0.8rem; background-color: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer;">
                                     <i class="fa-solid fa-trash"></i> Apagar
                                 </button>

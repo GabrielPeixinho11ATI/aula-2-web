@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto - Loja do Peixinho</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- React CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="header-root"></div>
+    <script src="/js/Header.jsx" type="text/babel"></script>
+
+    <main>
+        <section class="form-container">
+            <div class="form-title">
+                <h2><i class="fa-solid fa-pen-to-square"></i> Editar Produto</h2>
+                <p style="color: #64748b;">Atualize as informações do item</p>
+            </div>
+
+            <form id="form-editar">
+                <input type="hidden" id="produto-id">
+
+                <div class="form-group">
+                    <label>Nome do Produto</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-tag"></i>
+                        <input type="text" id="nome" name="nome" placeholder="Ex: Ração Premium" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Preço (R$)</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                        <input type="number" id="preco" name="preco" step="0.01" placeholder="0.00" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <div class="input-wrapper">
+                        <textarea id="descricao" name="descricao" rows="3" placeholder="Detalhes do item..."></textarea>
+                        <i class="fa-solid fa-align-left"></i>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="btn btn-primary btn-full">
+                        Salvar Alterações
+                    </button>
+                    <a href="/produtos" class="btn btn-secondary btn-full"
+                        style="text-align: center; text-decoration: none; padding: 0.8rem 0;">
+                        Cancelar
+                    </a>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Loja do Peixinho</p>
+    </footer>
+
+    <script>
+        // Pegar o ID da URL (/editar-produto/:id)
+        const urlPath = window.location.pathname;
+        const id = urlPath.split('/').pop();
+
+        // Ao carregar a página, busca os dados do produto
+        window.addEventListener('DOMContentLoaded', () => {
+            fetch(`/api/produtos/${id}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Produto não encontrado');
+                    return response.json();
+                })
+                .then(produto => {
+                    document.getElementById('produto-id').value = produto.id;
+                    document.getElementById('nome').value = produto.nome;
+                    document.getElementById('preco').value = produto.preco;
+                    document.getElementById('descricao').value = produto.descricao || '';
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar produto:', error);
+                    alert('Erro ao carregar dados do produto.');
+                    window.location.href = '/produtos';
+                });
+        });
+
+        // Lógica de envio do formulário (PUT)
+        document.getElementById('form-editar').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const dados = {
+                nome: document.getElementById('nome').value,
+                preco: document.getElementById('preco').value,
+                descricao: document.getElementById('descricao').value
+            };
+
+            fetch(`/api/produtos/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dados)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert(data.message);
+                        window.location.href = '/produtos';
+                    } else {
+                        alert('Erro ao atualizar: ' + (data.error || 'Erro desconhecido'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao enviar:', error);
+                    alert('Erro de conexão ao tentar atualizar o produto.');
+                });
+        });
+    </script>
+</body>
+
+</html>

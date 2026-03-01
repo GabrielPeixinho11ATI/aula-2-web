@@ -1,24 +1,21 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro - Loja do Peixinho</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <!-- React CDNs -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 </head>
+
 <body>
-    <header>
-        <div class="logo-area">
-            <i class="fa-solid fa-anchor"></i>
-            <span>Loja do Peixinho</span>
-        </div>
-        <nav>
-            <a href="/">Início</a>
-            <a href="/cadastro" class="active">Novo Produto</a>
-            <a href="/produtos">Estoque</a>
-        </nav>
-    </header>
+    <div id="header-root" data-active="cadastro"></div>
+    <script src="/js/Header.jsx" type="text/babel"></script>
 
     <main>
         <section class="form-container">
@@ -63,4 +60,5 @@
         <p>&copy; 2026 Loja do Peixinho</p>
     </footer>
 </body>
+
 </html>
